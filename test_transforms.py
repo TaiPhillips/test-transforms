@@ -57,7 +57,7 @@ agd66_epsg = pyproj.Proj(init='EPSG:20255')
 try:
     gda2020_epsg = pyproj.Proj(init='EPSG:7855')
 except RuntimeError as e:
-    print("Failed to load 2020 projection with error: {}\n".format(e))
+    print("Failed to load 2020 projection with error: {}".format(e))
 
 gda94_gda2020_from = pyproj.Proj(
     proj='utm',
@@ -130,4 +130,3 @@ for feature in data['features']:
     results.append(result)
 
 print("\nSuccess with {} out of {} using ogr2ogr.\n".format(sum(results), len(results)))
-print(ogr2ogr_command)

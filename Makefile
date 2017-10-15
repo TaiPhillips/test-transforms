@@ -11,3 +11,6 @@ get-grids:
 		-O ./grids/National_84_02_07_01.gsb
 	wget https://s3-ap-southeast-2.amazonaws.com/transformationgrids/GDA94_GDA2020_conformal_and_distortion.gsb \
 		-O ./grids/GDA94_GDA2020_conformal_and_distortion.gsb
+
+run-test:
+	python3 ./test_transforms.py
