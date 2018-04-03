@@ -102,23 +102,33 @@ for key, coord in gda94_coords.items():
     result = compare_coords(gda20_coord, output, coord)
     results.append(result)
 
-print("\nSuccess with {} out of {} using pyproj.".format(sum(results), len(results)))
+print("\nSuccess forwards with {} out of {} using pyproj.".format(sum(results), len(results)))
 
 
-write_coords_geojson(gda94_coords, '/tmp/gda94.geojson')
+write_coords_geojson(gda94_coords, './test/gda94.geojson')
+
+results = []
+for key, coord in gda2020_coords.items():
+    gda94_coord = gda94_coords[key]
+    output = pyproj.transform(gda94_gda2020_to, gda94_gda2020_from, coord[0], coord[1])
+    result = compare_coords(gda94_coord, output, coord)
+    results.append(result)
+
+print("\nSuccess reverse with {} out of {} using pyproj.".format(sum(results), len(results)))
 
 ogr2ogr_command = (
     'ogr2ogr '
     '-s_srs "+proj=utm +zone=55 +south +ellps=GRS80 +units=m +no_defs +towgs84=0,0,0,0,0,0,0 +nadgrids=' + GDA2020CONF_DIST + ' +wktext" '
     '-t_srs "+proj=utm +zone=55 +south +ellps=GRS80 +units=m +no_defs +towgs84=0,0,0,0,0,0,0 +wktext" '
-    '-f "GeoJSON" /tmp/gda20.geojson /tmp/gda94.geojson'
+    '-f "GeoJSON" ./test/gda20.geojson ./test/gda94.geojson'
 )
 
 result = subprocess.call(ogr2ogr_command, shell=True)
 
 data = None
-with open('/tmp/gda20.geojson', 'r') as data_file:
-    data = geojson.load(data_file)
+
+with open('./test/gda20.geojson', 'r') as data_file:
+    data = geojson.load(data_file,)
 
 results = []
 for feature in data['features']:
